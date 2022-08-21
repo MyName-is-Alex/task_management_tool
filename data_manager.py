@@ -58,3 +58,15 @@ def execute_select(statement, variables=None, fetchall=True):
             result_set = cursor.fetchall() if fetchall else cursor.fetchone()
     return result_set
 
+
+def connection_handler(function):
+    def wrapper(*args, **kwargs):
+        connection = establish_connection()
+        # we set the cursor_factory parameter to return with a RealDictCursor cursor (cursor which provide dictionaries)
+        dict_cur = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        ret_value = function(dict_cur, *args, **kwargs)
+        dict_cur.close()
+        connection.close()
+        return ret_value
+
+    return wrapper
