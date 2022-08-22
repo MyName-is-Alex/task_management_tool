@@ -4,11 +4,6 @@ from util import json_response
 import mimetypes
 import queries
 
-import os
-import psycopg2
-
-connection_string = os.environ.get('DATABASE_URL')
-connection = psycopg2.connect(connection_string)
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
