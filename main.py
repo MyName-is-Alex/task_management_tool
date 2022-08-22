@@ -160,17 +160,20 @@ def create_new_card():
         return jsonify(results)
 
 
-@app.route('/update-card-status-order', methods=['PUT', 'GET'])
+@app.route("/update-card-status-order", methods=['PUT', 'GET'])
 def set_card_status_and_order():
     if request.method == 'PUT':
         server_data = request.get_json()
         status_id = server_data[0]['status']
-        card_id = server_data[0]['cardId']
-        card_order = server_data[0]['cardOrder']
+        cards_order = server_data[0]['cardsOrder']
+        board_id = server_data[0]['boardId']
 
-        queries.update_card_status_and_order(card_id, status_id, card_order)
+        for card in cards_order:
+            card_id = int(card['cardId'])
+            card_order = int(card['cardOrder'])
+            queries.update_card_status_and_order(card_id, card_order, status_id)
 
-        results = {'id': status_id, 'card_id': card_id}
+        results = {'id': status_id, 'card_id': cards_order, 'board_id': board_id}
         return jsonify(results)
 
 

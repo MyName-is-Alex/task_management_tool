@@ -167,18 +167,12 @@ def get_last_card_id():
         """)
 
 
-@data_manager.connection_handler
-def update_card_status_and_order(cursor, card_id, status_id, card_order):
-    cursor.execute("""
+def update_card_status_and_order(card_id, card_order, status_id):
+    return data_manager.execute_select("""
         UPDATE cards 
-        SET status_id = %(status_id)s, card_order = %(card_order)s
+        SET card_order = %(card_order)s, status_id = %(status_id)s
         WHERE id = %(card_id)s
+        RETURNING id
         """, {'card_id': card_id,
-              'status_id': status_id,
-              'card_order': card_order})
-
-    cursor.execute("""
-        UPDATE cards
-        SET card_order = card_order + 1
-        WHERE card_order >= %(card_order)s AND id != %(card_id)s
-        """, {'card_order': card_order, 'card_id': card_id})
+              'card_order': card_order,
+              'status_id': status_id}, fetchall=False)

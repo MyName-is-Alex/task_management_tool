@@ -4,6 +4,8 @@ import {domManager} from "../view/domManager.js";
 import {cardsManager} from "./cardsManager.js";
 
 export let boardsManager = {
+    drake: dragula({}),
+
     loadBoards: async function () {
         const boards = await dataHandler.getBoards();
         for (let board of boards) {
@@ -33,7 +35,7 @@ export let boardsManager = {
                 'click', () => {
                     domManager.toggleBoardVisibility(board.id)
                 })
-            domManager.dragAndDrop(board.id);
+            this.dragAndDrop(board.id);
         }
     },
     addStatuses: async function (board) {
@@ -55,7 +57,7 @@ export let boardsManager = {
             })
         }
     },
-    displayNewBoardModal: function (objectName, boardId=0) {
+    displayNewBoardModal: function (objectName, boardId = 0) {
         const createNewBoardModal = htmlFactory(htmlTemplates.modal);
         const content = createNewBoardModal(objectName);
         domManager.addChild("#root", content, 'beforeend');
@@ -64,7 +66,7 @@ export let boardsManager = {
             const objectTitle = document.getElementById('inputBoardTitle').value
             if (objectName === 'Board') {
                 dataHandler.createNewBoard(objectTitle, domManager.addNewBoardToScreen)
-            } else if (objectName === 'Card'){
+            } else if (objectName === 'Card') {
                 dataHandler.createNewCard(objectTitle, boardId, domManager.addNewCardToScreen)
             }
             domManager.removeElement(".newBoardModalBackground");
@@ -93,6 +95,32 @@ export let boardsManager = {
         domManager.addEventListener(statusTitleIdentifier, 'click', () => {
             domManager.startChangeStatusName(statusTitleIdentifier, status.boardId, status.id)
         })
+    },
+    dragAndDrop: function (boardId) {
+        const elementIdentifier = `.board[data-board-id="${boardId}"] .board-column-content`
+        const containers = document.querySelectorAll(elementIdentifier)
+
+        for (let container of containers) {
+            const string = `.board[data-board-id="${boardId}"]` + ' .' + container.classList[container.classList.length - 1]
+            const containerIdentifier = document.querySelector(string)
+            this.drake.containers.push(containerIdentifier)
+        }
+
+        // DRAGULA LIBRARIE FOR DRAG AND DROP
+        this.drake.on("drop", function (el) {
+            const statusId = el.parentElement.parentElement.dataset.statusId;
+
+            let cardsOrder = [];
+            const statusElement = el.parentElement.children;
+            for (let i = 0; i < statusElement.length; i++) {
+                const cardIdAndOrder = {
+                    cardId: parseInt(statusElement[i].dataset.cardId),
+                    cardOrder: i + 1,
+                };
+                cardsOrder.push(cardIdAndOrder);
+            }
+            dataHandler.updateCardStatusAndOrder(cardsOrder, statusId, boardId);
+        });
     }
 };
 

@@ -76,34 +76,4 @@ export let domManager = {
         const parentIdentifier = `.board[data-board-id="${results.boardId}"] .board-column[data-status-id="${results.statusId}"] .board-column-content`
         domManager.addChild(parentIdentifier, content, 'beforeend')
     },
-    dragAndDrop: function (boardId) {
-        const elementIdentifier = `.board[data-board-id="${boardId}"] .board-column-content`
-        const containers = document.querySelectorAll(elementIdentifier)
-
-        let containersIdentifier = []
-
-        for (let container of containers) {
-            const string = `.board[data-board-id="${boardId}"]` + ' .' + container.classList[container.classList.length - 1]
-            const containerIdentifier = document.querySelector(string)
-            containersIdentifier.push(containerIdentifier)
-        }
-
-        // DRAGULA LIBRARIE FOR DRAG AND DROP
-        dragula(containersIdentifier).on('drag', function (el) {
-
-        }).on('drop', function (el) {
-            const statusId = el.parentElement.parentElement.dataset.statusId
-            const cardId = el.dataset.cardId
-
-            const parent = el.parentNode
-            const childIndex = Array.prototype.indexOf.call(parent.children, el)
-            const cardOrder = childIndex + 1
-
-            dataHandler.updateCardStatusAndOrder(cardId, statusId, cardOrder)
-        }).on('over', function (el, container) {
-
-        }).on('out', function (el, container) {
-
-        });
-    }
 };
