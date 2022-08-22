@@ -2,11 +2,7 @@ import data_manager
 
 
 def get_card_status(status_id):
-    """
-    Find the first status matching the given id
-    :param status_id:
-    :return: str
-    """
+
     status = data_manager.execute_select(
         """
         SELECT * FROM statuses s
@@ -19,10 +15,7 @@ def get_card_status(status_id):
 
 
 def get_boards():
-    """
-    Gather all boards
-    :return:
-    """
+
     return data_manager.execute_select(
         """
         SELECT * FROM boards
@@ -33,10 +26,7 @@ def get_boards():
 
 
 def get_statuses():
-    """
-    Gather all statuses
-    :return:
-    """
+
     return data_manager.execute_select(
         """
         SELECT * FROM statuses
@@ -59,13 +49,13 @@ def get_cards_for_board(board_id):
     return matching_cards
 
 
-@data_manager.connection_handler
-def add_new_board(cursor, board_title):
-    cursor.execute(
+def add_new_board(board_title):
+    return data_manager.execute_select(
         """
         INSERT INTO boards (title, statuses_id)
         VALUES (%(board_title)s, '1,2,3,4')
-        """, {'board_title': board_title}
+        RETURNING id;
+        """, {'board_title': board_title}, False
     )
 
 
@@ -77,13 +67,15 @@ def get_last_board_id():
         """, fetchall=False)
 
 
-@data_manager.connection_handler
-def update_board_title(cursor, newTitle, boardId):
-    cursor.execute("""
+def update_board_title(newTitle, boardId):
+    return data_manager.execute_select(
+        """
         UPDATE boards
         SET title = %(newTitle)s 
-        WHERE id = %(boardId)s;
-        """, {'newTitle': newTitle, 'boardId': boardId})
+        WHERE id = %(boardId)s
+        RETURNING id;
+        """, {'newTitle': newTitle, 'boardId': boardId}, False
+    )
 
 
 def check_if_status_allready_exists(status_title):
@@ -93,12 +85,14 @@ def check_if_status_allready_exists(status_title):
         """, {"status_title": status_title}, fetchall=False)
 
 
-@data_manager.connection_handler
-def create_status(cursor, status_title):
-    cursor.execute("""
-    INSERT INTO statuses (title)
-    VALUES (%(status_title)s)
-    """, {'status_title': status_title})
+def create_status(status_title):
+    return data_manager.execute_select(
+        """
+        INSERT INTO statuses (title)
+        VALUES (%(status_title)s)
+        RETURNING id;
+        """, {'status_title': status_title}, False
+    )
 
 
 def get_last_status_id(status_title):
@@ -117,25 +111,29 @@ def get_board_statuses(board_id):
         """, {'board_id': board_id}, fetchall=False)
 
 
-@data_manager.connection_handler
-def update_board_statuses(cursor, statuses, board_id):
-    cursor.execute("""
+def update_board_statuses(statuses, board_id):
+    return data_manager.execute_select(
+        """
         UPDATE boards
         SET statuses_id = %(statuses)s 
-        WHERE id = %(board_id)s;
-        """, {'statuses': statuses, 'board_id': board_id})
+        WHERE id = %(board_id)s
+        RETURNING id;
+        """, {'statuses': statuses, 'board_id': board_id}, False
+    )
 
 
-@data_manager.connection_handler
-def update_cards_position(cursor, board_id, previous_status_id, status_id):
-    cursor.execute("""
+def update_cards_position(board_id, previous_status_id, status_id):
+    return data_manager.execute_select(
+        """
         UPDATE cards 
         SET status_id = %(status_id)s
         WHERE status_id = %(previous_status_id)s AND board_id = %(board_id)s
+        RETURNING id;
         """, {'board_id': board_id,
               'previous_status_id': previous_status_id,
               'status_id': status_id
-              })
+              }, False
+    )
 
 
 def get_last_card_from_column(board_id, status_id):
@@ -147,16 +145,18 @@ def get_last_card_from_column(board_id, status_id):
         """, {'board_id': board_id, 'status_id': status_id}, fetchall=False)
 
 
-@data_manager.connection_handler
-def add_new_card(cursor, card_title, board_id, status_id, card_order):
-    cursor.execute("""
+def add_new_card(card_title, board_id, status_id, card_order):
+    return data_manager.execute_select(
+        """
         INSERT INTO cards (board_id, status_id, title, card_order)
         VALUES (%(board_id)s, %(status_id)s, %(card_title)s, %(card_order)s)
+        RETURNING id;
         """, {'card_title': card_title,
               'board_id': board_id,
               'status_id': status_id,
               'card_order': card_order
-              })
+              }, False
+    )
 
 
 def get_last_card_id():
