@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from util import json_response
 import mimetypes
 import queries
+import os
 
 
 mimetypes.add_type('application/javascript', '.js')
