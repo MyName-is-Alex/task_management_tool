@@ -44,4 +44,4 @@ If you would like to contribute to ProMan, please fork the repository and submit
 
 ## Contact
 
-If you have any questions or suggestions about WhatNotRent, feel free to contact me at mitualex12@yahoo.com.
+If you have any questions or suggestions about ProMan, feel free to contact me at mitualex12@yahoo.com.
