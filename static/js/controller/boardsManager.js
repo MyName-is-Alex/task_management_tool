@@ -96,6 +96,7 @@ export let boardsManager = {
         domManager.addEventListener(statusTitleIdentifier, 'click', () => {
             domManager.startChangeStatusName(statusTitleIdentifier, status.boardId, status.id)
         })
+        location.reload();
     },
     dragAndDrop: function (boardId) {
         const elementIdentifier = `.board[data-board-id="${boardId}"] .board-column-content`
