@@ -71,6 +71,7 @@ export let boardsManager = {
             }
             domManager.removeElement(".newBoardModalBackground");
             domManager.removeElement(".newBoardModal");
+            location.reload();
         })
     },
     addBoard: function () {
