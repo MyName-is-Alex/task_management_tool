@@ -45,3 +45,14 @@ If you would like to contribute to ProMan, please fork the repository and submit
 ## Contact
 
 If you have any questions or suggestions about ProMan, feel free to contact me at mitualex12@yahoo.com.
+
+## Preview
+
+### Home Page Desktop
+![Home Page](https://i.ibb.co/w720yn8/taskmanagementtool-homepage-desktop.jpg)
+
+### Add Board Desktop
+![Home Page](https://i.ibb.co/XDRsZp1/taskmanagementtool-addboard-desktop.jpg)
+
+### Closed Boards Desktop
+![Home Page](https://i.ibb.co/vYTV4KH/taskmanagementtool-closedboards-desktop.jpg)
