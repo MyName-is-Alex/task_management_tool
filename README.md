@@ -3,7 +3,7 @@
 ProMan is a project management tool that allows you to create and manage tasks in a simple and organized way. It features a user-friendly interface with a drag and drop feature that improves the workflow.
 ## Features
 
-### Codecool Shop has the following features:
+### ProMan has the following features:
 
 - Create and manage boards
 - Add tasks to boards
